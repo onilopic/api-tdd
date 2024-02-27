@@ -1,7 +1,6 @@
 ###############################################################################
 #                          Generated on phpdocker.io                          #
 ###############################################################################
-version: '3.1'
 services:
     mailhog:
         image: 'mailhog/mailhog:latest'
@@ -21,8 +20,14 @@ services:
             - '8080:80'
 
     php-fpm:
-        build: phpdocker/php-fpm
+        build:
+          context: ./phpdocker/php-fpm
+          args:
+            UID: ${USER_ID}
+            GID: ${GROUP_ID}
+        image: phpdocker/php-fpm
         working_dir: /application
+#        user: ${USER_ID}:${GROUP_ID}
         volumes:
             - '.:/application'
             - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'
