@@ -1,0 +1,21 @@
+{
+    "name": "onilopic/api-tdd",
+    "description": "Test Driven PHP",
+    "type": "project",
+    "require-dev": {
+        "pestphp/pest": "^2.34"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Onilopic\\ApiTdd\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {},
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
