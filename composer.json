@@ -5,6 +5,7 @@
     "require-dev": {
         "pestphp/pest": "^2.34"
     },
+    "version": "8.2",
     "license": "MIT",
     "autoload": {
         "psr-4": {

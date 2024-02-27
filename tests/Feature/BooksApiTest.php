@@ -1,6 +1,5 @@
 <?php
 
-
 it('retrieves the correct data from the books API', function () {
     // ARRANGE
 
