@@ -1,0 +1,56 @@
+version: '3'
+
+#  * Start containers on the foreground: `docker-compose up`. You will see a stream of logs for every container running.
+#      ctrl+c stops containers.
+#  * Stop containers: `docker-compose stop`
+#  * Kill containers: `docker-compose kill`
+#  * View container logs: `docker-compose logs` for all containers or `docker-compose logs SERVICE_NAME` for the logs of
+#      all containers in `SERVICE_NAME`.
+#  * Execute command inside of container: `docker-compose exec SERVICE_NAME COMMAND` where `COMMAND` is whatever you want
+#      to run. Examples:
+#        * Shell into the PHP container, `docker-compose exec php-fpm bash`
+#        * Run symfony console, `docker-compose exec php-fpm bin/console`
+#        * Open a mysql shell, `docker-compose exec mysql mysql -uroot -pCHOSEN_ROOT_PASSWORD`
+
+dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
+
+# MYSQL_USER=root
+# MYSQL_PASSWORD=password
+
+tasks:
+  upd:
+    desc: Start containers in the background
+    cmds:
+      - docker compose up -d
+  up:
+    desc: Start containers on the foreground. You will see a stream of logs for every container running. ctrl+c stops containers
+    cmds:
+      - docker compose up
+  stop:
+    desc: Stop containers
+    cmds:
+      - docker compose stop
+  kill:
+    desc: Kill containers
+    cmds:
+      - docker-compose kill
+  logs:
+    desc: View container logs `docker-compose logs` for all containers or `docker-compose logs SERVICE_NAME` for the logs of all containers in `SERVICE_NAME`.
+    cmds:
+      - docker compose logs {{.CLI_ARGS}}
+  shell-php:
+    desc: Shell into the PHP container, `docker-compose exec php-fpm bash`
+    cmds:
+      - docker-compose exec php-fpm bash
+  shell:
+    desc: Shell into the PHP container, `docker-compose exec php-fpm bash`
+    cmds:
+      - docker-compose exec {{.CLI_ARGS}} bash
+  console:
+    desc: Run symfony console
+    cmds:
+      - docker-compose exec php-fpm bin/console {{.CLI_ARGS}}
+  mysql:
+    desc: Open a mysql shell
+    cmds:
+      - docker compose exec mysql mysql -u$MYSQL_USER -p$MYSQL_PASSWORD
