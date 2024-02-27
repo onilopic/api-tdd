@@ -8,8 +8,13 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Onilopic\\ApiTdd\\": "src/"
+            "App\\": "src"
         }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "Tests\\": "tests"
+      }
     },
     "minimum-stability": "stable",
     "require": {},

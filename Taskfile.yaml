@@ -18,6 +18,11 @@ dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
 # MYSQL_PASSWORD=password
 
 tasks:
+  pest-test:
+    desc: Pest test in php container
+    cmds:
+      - docker-compose exec php-fpm ./vendor/bin/pest {{.CLI_ARGS}}
+
   build:
     desc: Build container
     cmds:
