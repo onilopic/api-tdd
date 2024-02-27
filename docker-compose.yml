@@ -27,7 +27,7 @@ services:
             GID: ${GROUP_ID}
         image: phpdocker/php-fpm
         working_dir: /application
-#        user: ${USER_ID}:${GROUP_ID}
+        user: ${USER_ID}:${GROUP_ID}
         volumes:
             - '.:/application'
             - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini'

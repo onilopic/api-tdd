@@ -18,6 +18,14 @@ dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
 # MYSQL_PASSWORD=password
 
 tasks:
+  build:
+    desc: Build container
+    cmds:
+      - docker compose build --no-cache {{.CLI_ARGS}}
+  build-php-fpm:
+    desc: Build container
+    cmds:
+      - docker compose build --no-cache php-fpm
   upd:
     desc: Start containers in the background
     cmds:

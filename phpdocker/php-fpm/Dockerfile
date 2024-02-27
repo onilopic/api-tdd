@@ -1,68 +1,12 @@
-############################################
-# PHPDocker.io PHP 8.2 / CLI and FPM image #
-############################################
+FROM php:8.2.16-fpm
 
-### CLI ###
-FROM ubuntu:jammy AS cli
+RUN apt -y update && apt -y upgrade
 
-ARG UID
-ARG GID
+RUN apt install unzip
 
-RUN usermod -u ${UID} www-data; groupmod -g ${GID} www-data
-# Fixes some weird terminal issues such as broken clear / CTRL+L
-ENV TERM=linux
+# Composer
+COPY --from=composer:2.7.1 /usr/bin/composer /usr/bin/composer
 
-# Ensure apt doesn't ask questions when installing stuff
-ENV DEBIAN_FRONTEND=noninteractive
+RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
-# Install Ondrej repos for Ubuntu jammy, PHP, composer and selected extensions - better selection than
-# the distro's packages
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gnupg \
-    && echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu jammy main" > /etc/apt/sources.list.d/ondrej-php.list \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C \
-    && apt-get update \
-    && apt-get -y --no-install-recommends install \
-        ca-certificates \
-        curl \
-        unzip \
-        php8.2-apcu \
-        php8.2-cli \
-        php8.2-curl \
-        php8.2-mbstring \
-        php8.2-opcache \
-        php8.2-readline \
-        php8.2-xml \
-        php8.2-zip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* ~/.composer
-
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-CMD ["php", "-a"]
-
-### FPM ###
-
-FROM cli AS fpm
-
-# Install FPM
-RUN apt-get update \
-    && apt-get -y --no-install-recommends install php8.2-fpm \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
-
-STOPSIGNAL SIGQUIT
-
-# PHP-FPM packages need a nudge to make them docker-friendly
-COPY overrides.conf /etc/php/8.2/fpm/pool.d/z-overrides.conf
-
-
-
-CMD ["/usr/sbin/php-fpm8.2", "-O" ]
-
-# Open up fcgi port
-EXPOSE 9000
-
-USER www-data
-
-WORKDIR "/application"
+WORKDIR /app
