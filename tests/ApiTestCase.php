@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use App\Http\Request;
+use App\Http\Response;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class ApiTestCase extends BaseTestCase
@@ -13,15 +15,27 @@ abstract class ApiTestCase extends BaseTestCase
         array  $headers = []
     ): object
     {
-        return new class() {
-            public function getStatus(): int
-            {
-                return 200;
-            }
+        // Json encode the data
+        $content = json_encode($data);
+        // Merge server variables with $headers
+        $server = array_merge([
+            'CONTENT_TYPE' => 'application/json',
+            'Accept' => 'application/json'
+        ], $headers);
+        // Create a $request using a static named constructor
+        $request = Request::create(
+            method: $method,
+            uri: $uri,
+            server: $server,
+            content: $content
+        );
 
-            public function getBody(): string
-            {
-                return '{
+        // Create / resolve the kernel
+
+        // Obtain a $response object: $response = $kernel = $kernel->handle($request);
+
+
+        $body = '{
   "id": 1,
   "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
   "year_published": 2008,
@@ -31,7 +45,8 @@ abstract class ApiTestCase extends BaseTestCase
     "bio": "This is an author"
   }
 }';
-            }
-        };
+
+        return new Response(body: $body, statusCode: 200, headers: []);
+
     }
 }
