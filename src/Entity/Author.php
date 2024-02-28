@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class Author
+class Author implements \JsonSerializable
 {
     public function __construct(
         private ?int $id,
@@ -15,5 +15,12 @@ class Author
     public static function create(?int $id, string $name, string $bio): self
     {
         return new self($id, $name, $bio);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $vars = get_object_vars($this);
+
+        return $vars;
     }
 }
