@@ -1,7 +1,7 @@
 <?php
 
 it('creates a correctly formed GET Request object', function() {
-    $request = \App\Http\Request:: create(
+    $request = \App\Http\Request::create(
         'GET',
         '/some/path?black=white&day=night',
         [
