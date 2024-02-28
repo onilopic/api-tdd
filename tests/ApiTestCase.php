@@ -6,10 +6,18 @@ use App\Http\Kernel;
 use App\Http\Request;
 use App\Http\Response;
 use App\Routing\Router;
+use League\Container\Container;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class ApiTestCase extends BaseTestCase
 {
+    private Container $container;
+
+    protected function setUp(): void
+    {
+        $this->container = include dirname(__DIR__) . '/config/services.php';
+    }
+
     public function json(
         string $method = 'GET',
         string $uri = '/',
@@ -31,24 +39,16 @@ abstract class ApiTestCase extends BaseTestCase
             server: $server,
             content: $content
         );
+
+        //$router = new Router();
+        //$router->setRoutes();
+
         // Create / resolve the kernel
-        $kernel = new Kernel(new Router());
+        $kernel = $this->container->get(Kernel::class);
+
+        dd($kernel);
         // Obtain a $response object: $response = $kernel = $kernel->handle($request);
         $response = $kernel->handle($request);
         return $response;
-
-//        $body = '{
-//  "id": 1,
-//  "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
-//  "year_published": 2008,
-//  "author": {
-//    "id": 1,
-//    "name": "Robert C. Martin",
-//    "bio": "This is an author"
-//  }
-//}';
-//
-//        return new Response(body: $body, statusCode: 200, headers: []);
-
     }
 }
