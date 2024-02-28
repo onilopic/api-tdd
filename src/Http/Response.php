@@ -12,8 +12,8 @@ class Response
     public const HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public function __construct(
-        private string $body = '',
-        private int $statusCode = 200,
+        private string   $body = '',
+        private int      $statusCode = 200,
         private iterable $headers = []
     )
     {
@@ -27,5 +27,27 @@ class Response
     public function getStatusCode(): int
     {
         return $this->statusCode;
+    }
+
+    public function send(): void
+    {
+        // start output buffering
+        ob_start();
+
+        // send headers
+        foreach ($this->headers as $key => $value) {
+            header("$key: $value"); // e.g. "Content-Type: application/json";
+        }
+
+        // This will actually add the content to the buffer
+        echo $this->body;
+
+        // Flush the buffer, sending the content to the client
+        ob_end_flush();
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 }
