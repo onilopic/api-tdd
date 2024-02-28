@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Http\Response;
+use App\Repository\BookRepository;
 
 class BooksController
 {
