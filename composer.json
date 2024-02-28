@@ -3,7 +3,8 @@
     "description": "Test Driven PHP",
     "type": "project",
     "require-dev": {
-        "pestphp/pest": "^2.34"
+        "pestphp/pest": "^2.34",
+        "symfony/var-dumper": "^7.0"
     },
     "version": "8.2",
     "license": "MIT",
@@ -18,7 +19,6 @@
       }
     },
     "minimum-stability": "stable",
-    "require": {},
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
