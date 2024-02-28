@@ -6,6 +6,8 @@ $container->delegate(new \League\Container\ReflectionContainer(true));
 
 # parameters
 $routes = include __DIR__ . '/routes.php';
+$dsn = 'sqlite:db/pest-tdd.sqlite';
+$container->add('dsn', new \League\Container\Argument\Literal\StringArgument($dsn));
 
 # services
 $container->add(\App\Routing\RouteHandlerResolver::class)
@@ -19,5 +21,8 @@ $container->extend(\App\Routing\Router::class)
 
 $container->add(\App\Http\Kernel::class)
     ->addArguments([\App\Routing\Router::class]);
+
+$container->addShared(\App\Database\Connection::class)
+    ->addArguments(['dsn']);
 
 return $container;
