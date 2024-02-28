@@ -33,6 +33,17 @@ class Request
         return new self($queryParams, $serverVars);
     }
 
+    public static function createFromGlobals(): self
+    {
+        return new self(
+            $_GET,
+            $_SERVER,
+            $_POST,
+            $_COOKIE,
+            $_FILES
+        );
+    }
+
     public function getQueryParams(): array
     {
         return $this->queryParams;
