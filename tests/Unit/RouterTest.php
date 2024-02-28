@@ -1,13 +1,19 @@
 <?php
 
-it('returns a 200 Response object if a valid route exists', function() {
+use App\Http\Response;
+
+it('returns a correct Response object', function(string $method, string $path, int $statusCode) {
 
     // ARRANGE
-    $request = \App\Http\Request::create('GET', '/foo');
-    $router = new \App\Routing\Router();
+    $request = \App\Http\Request::create($method, $path);
+    $handler =  static fn() => new Response();
+    $routeHandlerResolver = Mockery::mock(\App\Routing\RouteHandlerResolver::class);
+    $routeHandlerResolver->shouldReceive('resolve')
+        ->andReturn($handler);
+    $router = new \App\Routing\Router($routeHandlerResolver);
 
     $router->setRoutes([
-        ['GET', '/foo', fn() => new \App\Http\Response()]
+        ['GET', '/foo', $handler]
     ]);
 
     // ACT
@@ -15,15 +21,46 @@ it('returns a 200 Response object if a valid route exists', function() {
 
     // ASSERT
     expect($response)
-        ->toBeInstanceOf(\App\Http\Response::class)
-        ->and($response->getStatusCode())->toBe(200);
+        ->toBeInstanceOf(Response::class)
+        ->and($response->getStatusCode())->toBe($statusCode);
 
 });
 
 it('returns a 404 Response object if a route does not exist', function() {
+    $request = \App\Http\Request::create('GET', '/foo');
+    $handler = fn() => new Response();
+    $routeHandlerResolver = Mockery::mock(\App\Routing\RouteHandlerResolver::class);
+    $routeHandlerResolver->shouldReceive('resolve')
+        ->andReturn($handler);
+    $router = new \App\Routing\Router($routeHandlerResolver);
+    $router->setRoutes([
+        ['GET', '/bar', $handler]
+    ]);
 
-})->todo();
+    // ACT
+    $response = $router->dispatch($request);
+
+    expect($response)
+        ->toBeInstanceOf(Response::class)
+        ->and($response->getStatusCode())->toBe(Response::HTTP_NOT_FOUND);
+});
 
 it('returns a 405 Response object if a not allowed method is used', function() {
+    // ARRANGE
+    $request = \App\Http\Request::create('GET', '/foo');
+    $handler = static fn() => new Response();
+    $routeHandlerResolver = Mockery::mock(\App\Routing\RouteHandlerResolver::class);
+    $routeHandlerResolver->shouldReceive('resolve')
+        ->andReturn($handler);
+    $router = new \App\Routing\Router($routeHandlerResolver);
+    $router->setRoutes([
+        ['POST', '/foo', $handler]
+    ]);
 
+    // ACT
+    $response = $router->dispatch($request);
+
+    expect($response)
+        ->toBeInstanceOf(Response::class)
+        ->and($response->getStatusCode())->toBe(Response::HTTP_METHOD_NOT_ALLOWED);
 })->todo();

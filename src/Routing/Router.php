@@ -11,6 +11,10 @@ class Router
 {
     private iterable $routes;
 
+    public function __construct(private readonly RouteHandlerResolver $routeHandlerResolver)
+    {
+    }
+
     public function setRoutes(iterable $routes): void
     {
         $this->routes = $routes;
@@ -32,24 +36,17 @@ class Router
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
-                // ... 404 Not Found
+                $response = new Response('Route not found', Response::HTTP_NOT_FOUND);
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = $routeInfo[1];
-                // ... 405 Method Not Allowed
+                $response = new Response('Method not allowed', Response::HTTP_METHOD_NOT_ALLOWED);
                 break;
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
-
-
-
-                if (is_array($handler)) {
-                    $handler = [new $handler, $handler[1]];
-                }
-
-                $response = $handler();
                 $vars = $routeInfo[2];
-                // ... call $handler with $vars
+                $handler = $this->routeHandlerResolver->resolve($handler);
+                $response = $handler(...$vars);
                 break;
         }
 
