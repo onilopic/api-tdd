@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Http\Response;
@@ -11,9 +13,9 @@ class BooksController
     {
     }
 
-    public function show(int $id): Response
+    public function show(int|string $id): Response
     {
-        $book = $this->bookRepository->findById($id);
+        $book = $this->bookRepository->findById((int)$id);
 
         return new Response(json_encode($book), Response::HTTP_OK);
     }
