@@ -3,14 +3,15 @@
 namespace App\Command;
 
 use App\Database\Connection;
+use App\Database\MigrationInterface;
+use PDOException;
 
 class Migrate implements CommandInterface
 {
     public function __construct(
-        private Connection $connection,
-        private string $migrationsFolder
+        private readonly Connection $connection,
+        private readonly string $migrationsFolder
     ) {
-
     }
 
     public function execute(): void
@@ -18,23 +19,44 @@ class Migrate implements CommandInterface
         // Obtain PDO
         $pdo = $this->connection->getPdo();
 
-        // Open a try / catch - need to rollback if failures..no half migrated states
+        // Open a try / catch - need to rollback if failures no half migrated states
+        try {
 
-        // Begin a transaction
-        $files = scandir($this->migrationsFolder);
+            // Begin a transaction
+            $pdo->beginTransaction();
 
-        dd($pdo, $files);
+            $files = scandir($this->migrationsFolder);
 
-        // Loop through files in migrations folder
+//            dd($pdo, $files);
 
-        // Include the file
+            // Loop through files in migrations folder
+            foreach ($files as $file) {
 
-        // Check that it is a Migration
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
 
-        // Call up method
+                // Include the file
+                $migration = include $this->migrationsFolder . '/' . $file;
 
-        // Catch an exception and roll back
+                // Check that it is a Migration
+                if (!$migration instanceof MigrationInterface) {
+                    continue;
+                }
 
-        // Throw another exception
+                // Call up method
+                $migration->up($pdo);
+            }
+
+            // Commit transaction
+            $pdo->commit();
+        } catch (PDOException $exception) {
+            // Catch an exception and roll back
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            // Throw another exception
+            throw $exception;
+        }
     }
 }
