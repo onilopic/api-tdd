@@ -18,6 +18,10 @@ dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
 # MYSQL_PASSWORD=password
 
 tasks:
+  pest-type-coverage:
+    desc: Pest type coverage When exception use (@pest-ignore-type)
+    cmds:
+      - docker-compose exec php-fpm ./vendor/bin/pest --type-coverage {{.CLI_ARGS}}
   pest-test:
     desc: Pest test in php container
     cmds:

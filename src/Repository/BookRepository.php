@@ -15,7 +15,7 @@ class BookRepository
     {
     }
 
-    public function findById(int $id)
+    public function findById(int $id): Book
     {
         // Retrieve book data from the database
 
