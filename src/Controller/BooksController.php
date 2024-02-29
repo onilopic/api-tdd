@@ -18,7 +18,7 @@ class BooksController
     {
         $book = $this->bookRepository->findById((int)$id);
         if ($book === null) {
-            return new JsonResponse(new \('Resource not found'), 404);
+            return new JsonResponse('Resource not found', 404);
         }
 
         return new JsonResponse($book, Response::HTTP_OK);

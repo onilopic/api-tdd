@@ -71,3 +71,11 @@ tasks:
     desc: Open a mysql shell
     cmds:
       - docker compose exec mysql mysql -u$MYSQL_USER -p$MYSQL_PASSWORD
+  genjwt:
+    desc: Generate JWT token
+    cmds:
+      - docker-compose exec php-fpm php authenticate.php {{.CLI_ARGS}}
+  jwt-key:
+    desc: Generate jwt key
+    cmds:
+      - openssl rand -base64 32

@@ -27,6 +27,7 @@ $user = $stmt->fetch();
 
 // Verify password
 $authenticated = password_verify($password, $user['password']);
+//password_hash('', PASSWORD_DEFAULT)
 
 // Exit if not authenticated
 if (!$authenticated) {
@@ -34,7 +35,7 @@ if (!$authenticated) {
 }
 
 // Generate a key (add .env and container at the end of the lesson)
-$key = 'B1XbsUqw0LAfTcryj73xH76t+JfIthWQ/2GJQIptvqg=';
+$key = 'Gf6sA7RvCq8W1KNgT3oesyoU3D1qslh4O3gbWhPKWPQ';
 
 // Create issued at
 $issuedAt = time();

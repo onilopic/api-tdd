@@ -15,6 +15,23 @@ it('retrieves the correct book data from the books API', function(
     array $authorData
 ) {
     // ARRANGE
+    $key = $this->container->get('jwtSecretKey');
+
+    $issuedAt = time();
+
+    $payload = [
+        'iss' => 'https://books-api.org',
+        'aud' => 'https://books-api.com',
+        'iat' => $issuedAt,
+        'nbf' => $issuedAt,
+        'exp' => $issuedAt + (60 * 60),
+        'data' => [
+            'username' => 'garyclarke',
+            'plan' => 'premium'
+        ]
+    ];
+
+    $jwt = \Firebase\JWT\JWT::encode($payload, $key, 'HS256');
     // Data fixtures
     // Create Author object
     $author = Author::create(
@@ -44,7 +61,7 @@ it('retrieves the correct book data from the books API', function(
     $bookMapper->save($book);
 
     // ACT
-    $response = $this->json(method: 'GET', uri: $uri);
+    $response = $this->json(method: 'GET', uri: $uri, headers: ['HTTP_AUTHORIZATION' => $jwt]);
 
     // ASSERT
     expect($response->getStatusCode())->toBeInt()->toBe(200)

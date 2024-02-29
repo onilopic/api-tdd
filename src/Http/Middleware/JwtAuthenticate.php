@@ -15,7 +15,7 @@ use UnexpectedValueException;
 class JwtAuthenticate implements MiddlewareInterface
 {
     public function __construct(
-        private readonly string $jwtSecretKey
+        private string $jwtSecretKey
     ) {
     }
 
