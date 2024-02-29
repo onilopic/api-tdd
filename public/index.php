@@ -3,6 +3,8 @@
 use App\Http\Kernel;
 use App\Http\Request;
 
+chdir(dirname(__FILE__). '/..');
+
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $container = include dirname(__DIR__) . '/config/services.php';

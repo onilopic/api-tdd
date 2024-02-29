@@ -15,44 +15,33 @@ class BookRepository
     {
     }
 
-    public function findById(int $id): Book
+    public function findById(int $id): ?Book
     {
         // Retrieve book data from the database
 
         // Use it to create and hydrate a Book
-//        $row = [
-//            'id' => 999,
-//            'title' => 'A Test Book',
-//            'year_published' => 1999,
-//            'author_id' => 123,
-//            'author_name' => 'A. N. Author',
-//            'author_bio' => 'This is an author'
-//        ];
-
-//        $dsn = 'sqlite:db/pest-tdd.sqlite';
-//        $pdo = new PDO($dsn);
-//        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-//        $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
         // Obtain a PDO instance
         $pdo = $this->connection->getPdo();
 
         // Prepare the statement (SQL)
-        $stmt = $pdo->prepare("SELECT
-                                books.id,
-                                books.title,
-                                books.year_published,
-                                authors.id as author_id,
-                                authors.name as author_name,
-                                authors.bio as author_bio
-                            FROM
-                                books
-                            INNER JOIN
-                                authors
-                            ON
-                                books.author_id = authors.id
-                            WHERE
-                                books.id = :id");
+        $stmt = $pdo->prepare(
+            "SELECT
+                    books.id,
+                    books.title,
+                    books.year_published,
+                    authors.id as author_id,
+                    authors.name as author_name,
+                    authors.bio as author_bio
+                FROM
+                    books
+                INNER JOIN
+                    authors
+                ON
+                    books.author_id = authors.id
+                WHERE
+                    books.id = :id
+        ");
 
         // Execute the statement
         $stmt->execute(['id' => $id]);
