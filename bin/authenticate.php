@@ -1,5 +1,5 @@
+#!/usr/bin/env php
 <?php
-
 
 // Get Firebase JWT
 
@@ -35,8 +35,8 @@ if (!$authenticated) {
 }
 
 // Generate a key (add .env and container at the end of the lesson)
-$key = 'Gf6sA7RvCq8W1KNgT3oesyoU3D1qslh4O3gbWhPKWPQ';
-
+//$key = 'Gf6sA7RvCq8W1KNgT3oesyoU3D1qslh4O3gbWhPKWPQ=';
+$key = $container->get('jwtSecretKey');
 // Create issued at
 $issuedAt = time();
 
