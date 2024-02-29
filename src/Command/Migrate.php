@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+
 use App\Database\Connection;
 use App\Database\MigrationInterface;
 use PDOException;

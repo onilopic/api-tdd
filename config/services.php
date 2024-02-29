@@ -44,4 +44,5 @@ $container->addShared(\App\Database\Connection::class)
 $container->add(\App\Http\Middleware\JwtAuthenticate::class)
     ->addArgument('jwtSecretKey');
 
+
 return $container;
